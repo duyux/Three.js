@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>改变相机的位置，让物体移动</title>
         <script src="js/three.min.js"></script>
+        <script src="js/Stats.js"></script>
         <style type="text/css">
             div#canvas-frame {
                 border: none;
@@ -16,6 +17,7 @@
         </style>
         <script>
             var renderer;
+            var stats;
             function initThree() {
                 width = document.getElementById('canvas-frame').clientWidth;
                 height = document.getElementById('canvas-frame').clientHeight;
@@ -25,6 +27,13 @@
                 renderer.setSize(width, height);
                 document.getElementById('canvas-frame').appendChild(renderer.domElement);
                 renderer.setClearColor(0xFFFFFF, 1.0);
+
+                
+                stats = new Stats();
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById('canvas-frame').appendChild(stats.domElement);
             }
 
             var camera;
@@ -74,6 +83,8 @@
                 camera.position.x =camera.position.x +1;
                 renderer.render(scene, camera);
                 requestAnimationFrame(animation);
+
+                stats.update();
             }
 
         </script>
