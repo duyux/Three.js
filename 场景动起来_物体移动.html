@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>画网格线</title>
+        <title>改变物体自身的位置，让物体移动</title>
         <script src="js/three.min.js"></script>
         <style type="text/css">
             div#canvas-frame {
@@ -30,10 +30,9 @@
             var camera;
             function initCamera() {
                 camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-                camera.position.set(0,1000,0);
-                camera.up.x = 0;
-                camera.up.y = 0;
-                camera.up.z = 1;
+                camera.position.set(0,0,600);
+                camera.up.set(0,1,0);
+              
                 camera.lookAt(0,0,0);
             }
 
@@ -44,29 +43,22 @@
 
             var light;
             function initLight() {
-                light = new THREE.DirectionalLight(0xFF0000, 1.0, 0);
+                light = new THREE.AmbientLight(0xFF0000);
                 light.position.set(100, 100, 200);
+                scene.add(light);
+                light = new THREE.PointLight(0x00FF00);
+                light.position.set(0, 0,300);
                 scene.add(light);
             }
 
             var cube;
+            var mesh;
             function initObject() {
-                var geometry = new THREE.Geometry();
-                geometry.vertices.push( new THREE.Vector3( - 500, 0, 0 ) );
-                geometry.vertices.push( new THREE.Vector3( 500, 0, 0 ) );
-
-                for ( var i = 0; i <= 20; i ++ ) {
-
-                    var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } ) );
-                    line.position.z = ( i * 50 ) - 500;
-                    scene.add( line );
-
-                    var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2 } ) );
-                    line.position.x = ( i * 50 ) - 500;
-                    line.rotation.y = 90 * Math.PI / 180;
-                    scene.add( line );
-
-                }
+                var geometry = new THREE.CylinderGeometry( 100,150,400);
+                var material = new THREE.MeshLambertMaterial( { color:0xFFFFFF} );
+                mesh = new THREE.Mesh( geometry,material);
+                mesh.position = new THREE.Vector3(0,0,0);
+                scene.add(mesh);
             }
 
             function threeStart() {
@@ -75,8 +67,14 @@
                 initScene();
                 initLight();
                 initObject();
-                renderer.clear();
+                animation();
+
+            }
+            function animation()
+            {
+                mesh.position.x-=1;
                 renderer.render(scene, camera);
+                requestAnimationFrame(animation);
             }
 
         </script>
